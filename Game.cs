@@ -205,7 +205,7 @@ namespace BingoGame
                     {
                         Random rnd = new Random();
                         ForegroundColor = ConsoleColor.Cyan;
-                        randomNum = rnd.Next(1, 10);    //TODO: SCAM WITH Next() 
+                        randomNum = rnd.Next(1, 10);
                         ForegroundColor = ConsoleColor.White;
                         WaitForResult();
                         if (parsedUserInput != randomNum)
