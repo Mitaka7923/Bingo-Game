@@ -1,0 +1,13 @@
+D:\DimitarProjects\bin\publish_BingoGame\Devonshire_Waltz_(Allegretto).wav
+D:\DimitarProjects\bin\publish_BingoGame\Bingo_TheGame.exe
+D:\DimitarProjects\bin\publish_BingoGame\Bingo_TheGame.dll
+D:\DimitarProjects\bin\publish_BingoGame\Bingo_TheGame.deps.json
+D:\DimitarProjects\bin\publish_BingoGame\Bingo_TheGame.runtimeconfig.json
+D:\DimitarProjects\bin\publish_BingoGame\Bingo_TheGame.pdb
+D:\DimitarProjects\bin\publish_BingoGame\Microsoft.Win32.SystemEvents.dll
+D:\DimitarProjects\bin\publish_BingoGame\System.Drawing.Common.dll
+D:\DimitarProjects\bin\publish_BingoGame\System.Windows.Extensions.dll
+D:\DimitarProjects\bin\publish_BingoGame\runtimes\win\lib\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+D:\DimitarProjects\bin\publish_BingoGame\runtimes\unix\lib\netcoreapp3.1\System.Drawing.Common.dll
+D:\DimitarProjects\bin\publish_BingoGame\runtimes\win\lib\netcoreapp3.1\System.Drawing.Common.dll
+D:\DimitarProjects\bin\publish_BingoGame\runtimes\win\lib\netcoreapp3.1\System.Windows.Extensions.dll

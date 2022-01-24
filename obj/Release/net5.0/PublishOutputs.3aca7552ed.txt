@@ -1,0 +1,13 @@
+D:\DimitarProjects\bin\publish\Devonshire_Waltz_(Allegretto).wav
+D:\DimitarProjects\bin\publish\BingoGame.exe
+D:\DimitarProjects\bin\publish\BingoGame.dll
+D:\DimitarProjects\bin\publish\BingoGame.deps.json
+D:\DimitarProjects\bin\publish\BingoGame.runtimeconfig.json
+D:\DimitarProjects\bin\publish\BingoGame.pdb
+D:\DimitarProjects\bin\publish\Microsoft.Win32.SystemEvents.dll
+D:\DimitarProjects\bin\publish\System.Drawing.Common.dll
+D:\DimitarProjects\bin\publish\System.Windows.Extensions.dll
+D:\DimitarProjects\bin\publish\runtimes\win\lib\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+D:\DimitarProjects\bin\publish\runtimes\unix\lib\netcoreapp3.1\System.Drawing.Common.dll
+D:\DimitarProjects\bin\publish\runtimes\win\lib\netcoreapp3.1\System.Drawing.Common.dll
+D:\DimitarProjects\bin\publish\runtimes\win\lib\netcoreapp3.1\System.Windows.Extensions.dll

@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "M2ajO0VdqyfruOPhUg0pAO7AsBqr7EseVyucq/6+aw0N8Z5FkwwHzVQ5pp0uRILOd7p70UyQgOgUpI7znE7RXQ==",
+  "success": true,
+  "projectFilePath": "D:\\DimitarProjects\\Personal\\Bingo-Game\\Bingo_TheGame.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\dimit\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\dimit\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\dimit\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
+    "C:\\Users\\dimit\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.13\\microsoft.netcore.app.host.win-x64.5.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}
