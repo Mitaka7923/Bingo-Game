@@ -10,6 +10,7 @@ namespace BingoGame
     {
         public int credits = 0;
         public int houseCredits = 0;
+
         private int count = 0;
         private int randomNum = 0;
         private int counter;
@@ -36,8 +37,9 @@ namespace BingoGame
         {
             Title = "БИНГО - ИГРАТА!";
             FileCheck();
-            SetCreditsFromFile();
-            SetSecretFromFile();
+            SetCreditsFromFile();              
+            SetSecretFromFile();               // <--- Here I transfer the file valuse to the variables
+            SetHouseCreditsFromFIle();         
             RunMainMenu();
         }
 
@@ -64,9 +66,12 @@ namespace BingoGame
         private void FileIsEmpty()
         {
             bool isCreditsEmpty = new FileInfo(playerCreditsPath).Length == 0;
+            bool isHouseCreditsEmpty = new FileInfo(houseCreditsPath).Length == 0;
             bool isSecretEmpty = new FileInfo(isSecretPath).Length == 0;
             if (isCreditsEmpty)
                 SetInitialCreditsValue();
+            if (isHouseCreditsEmpty)
+                SetInitialHouseCreditsValue();
             if (isSecretEmpty)
                 SetSecretValue();
         }
@@ -96,6 +101,11 @@ namespace BingoGame
         private void SetCreditsFromFile()
         {
             credits = Convert.ToInt32(File.ReadAllText(playerCreditsPath));
+        }
+
+        private void SetHouseCreditsFromFIle()
+        {
+            houseCredits = Convert.ToInt32(File.ReadAllText(houseCreditsPath));
         }
 
         private void SetSecretFromFile()
@@ -185,8 +195,14 @@ namespace BingoGame
                 WriteLine("Това все още не е пълната игра...ще има още. Бингото е все още в разработка.");
                 Write($"{Environment.NewLine}Баланс на кредити: ");
                 ForegroundColor = ConsoleColor.DarkYellow;
-                WriteLine($"{credits} CR");
+                Write($"{credits} CR");
                 ForegroundColor = ConsoleColor.White;
+                if (credits < 0)
+                {
+                    ForegroundColor = ConsoleColor.Red;
+                    WriteLine("(на лъжата краката са къси...)");
+                    ForegroundColor = ConsoleColor.White;
+                }
                 WriteLine("Натисни някое копче за да се върнеш към менюто...");
                 ReadKey(true);
                 RunMainMenu();
@@ -205,10 +221,23 @@ namespace BingoGame
                 ForegroundColor = ConsoleColor.DarkYellow;
                 WriteLine($"{houseCredits} CR");
                 ForegroundColor = ConsoleColor.White;
-                Write("Баланс на кредити: ");
-                ForegroundColor = ConsoleColor.DarkYellow;
-                WriteLine($"{credits} CR");
-                ForegroundColor = ConsoleColor.White;
+                if (credits >= 0)
+                {
+                    Write("Баланс на кредити: ");
+                    ForegroundColor = ConsoleColor.DarkYellow;
+                    WriteLine($"{credits} CR");
+                    ForegroundColor = ConsoleColor.White;
+                }
+                else
+                {
+                    Write("Баланс на кредити: ");
+                    ForegroundColor = ConsoleColor.DarkYellow;
+                    Write($"{credits} CR");
+                    ForegroundColor = ConsoleColor.White;
+                    ForegroundColor = ConsoleColor.Red;
+                    WriteLine(" (на лъжата краката са къси...)");
+                    ForegroundColor = ConsoleColor.White;
+                }
                 WriteLine("Натисни някое копче за да се върнеш към менюто...");
                 ReadKey(true);
                 RunMainMenu();
@@ -488,11 +517,15 @@ namespace BingoGame
 
                     if (inputStr == genStr)
                     {
+                        int workedCR = 1;
                         count++;
-                        credits++;
+                        credits += workedCR;
+                        if (isSecret)
+                            workedCR = 2;
+
                         Write($"Ти си изработи ");
                         ForegroundColor = ConsoleColor.DarkYellow;
-                        WriteLine($"1 CR{Environment.NewLine}");
+                        WriteLine($"{workedCR} CR{Environment.NewLine}");
                         ForegroundColor = ConsoleColor.White;
                         Thread.Sleep(1500);
                     }
@@ -584,6 +617,7 @@ namespace BingoGame
                 ForegroundColor = ConsoleColor.Gray;
                 Thread.Sleep(1200);
                 --credits;
+                SaveCreditValue();
                 Thread.Sleep(3000);
                 RunFirstChoise();
             }
