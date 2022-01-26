@@ -8,7 +8,11 @@ using Bingo_TheGame;
 
 namespace Bingo_TheGame
 {
-    //Testing class
+    /// <summary>
+    /// This is a test class - we do not use it anywhere
+    /// maybe will be implemented later on. 
+    /// For now i don't think it is of any use.
+    /// </summary>
     class SetValues
     {
         public static void SaveFiles(string creditsPath, string houseCreditsPath, string isSecretPath, int credits, int houseCredits, bool isSecret)
