@@ -9,14 +9,17 @@ namespace BingoGame
     class Game
     {
         public int credits = 0;
-        public int houseCredits = 0;
-
+        public int houseCredits = 50;
+        private int workedCR = 1;
         private int count = 0;
+        //private int[] bingoBall = new int[5];
+        private int userBet = 0;
         private int randomNum = 0;
         private int counter;
         private string[] options;
         private string prompt;
         private bool isSecret = false;
+        private string bingoName = "Bingo Anel";
         private const string waiting = ".";
         private const string creator = "Mitaka7923";
         private const string playerCreditsPath = "PlayerCredits.txt";
@@ -24,24 +27,53 @@ namespace BingoGame
         private const string isSecretPath = "IsSecret.txt";
         private const int multiplier = 2;
 
-        //TODO: Create this file and manage house credits. They are equal to whatever credits
-        //      the user spends and initial value is 0.
-        //      File should be created in the initial boot right with the Credits.txt and should
-        //      be on the same method.........
-
-        //TODO: Save 'playerCredits','houseCredits' and 'isSecret' in one method
-        //TODO: If secret menu is on add to information - House Credits
-        //TODO: All the charged credits from the player go to the house vault
+        //TODO: Save 'playerCredits','houseCredits' and 'isSecret' in one method    -----HARD (think)
+        //TODO: Optimize the methods and the classes - too many methods in 'Game' class
            
         public void Start()
         {
             Title = "БИНГО - ИГРАТА!";
+            //BingoInside();
+            //BingoTestNums();    // CAlll bingoballs and userguesses
             FileCheck();
-            SetCreditsFromFile();              
-            SetSecretFromFile();               // <--- Here I transfer the file valuse to the variables
-            SetHouseCreditsFromFIle();         
+            SetCreditsFromFile();
+            SetSecretFromFile();
+            SetHouseCreditsFromFIle();
             RunMainMenu();
         }
+
+        //TODO: Continue this logic about the bingo algorithm
+        //private void BingoTestNums(int[] bingoBalls, int[] userNumbers)
+        //{
+        //    int guess = 0;
+        //    int counter = 0;
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        if (bingoBalls[i] == userNumbers[i + 1])
+        //        {
+        //            if (bingoBalls[i] == bingoBalls.Length)
+        //            {
+        //                bingoBalls[i] = 0;
+        //                counter++;
+        //                if (counter == 2)
+        //                {
+        //                    break;
+        //                }
+        //            }
+        //            guess++;
+        //        }
+        //    }
+        //}
+
+        //private void BingoInside()
+        //{
+        //    Clear();
+        //    Random bingoBallNum = new Random();
+        //    for (int i = 0; i < 5; i++)
+        //    {
+        //        bingoBall[i] = bingoBallNum.Next(1, 75);
+        //    }
+        //}
 
         private void FileCheck()
         {
@@ -61,7 +93,7 @@ namespace BingoGame
                 SetInitialHouseCreditsValue();
             }
             FileIsEmpty();
-        }   //Here I check if the file for the credits exists - if not sets the initial credits(20)
+        }
 
         private void FileIsEmpty()
         {
@@ -83,7 +115,7 @@ namespace BingoGame
 
         private void SetInitialHouseCreditsValue()
         {
-            File.WriteAllText(houseCreditsPath, "0");
+            File.WriteAllText(houseCreditsPath, "50");
         }
 
         private void SetSecretValue()
@@ -106,6 +138,11 @@ namespace BingoGame
         private void SetHouseCreditsFromFIle()
         {
             houseCredits = Convert.ToInt32(File.ReadAllText(houseCreditsPath));
+        }
+
+        private void SaveHouseCredits()
+        {
+            File.WriteAllText(houseCreditsPath, Convert.ToString(houseCredits));
         }
 
         private void SetSecretFromFile()
@@ -200,10 +237,10 @@ namespace BingoGame
                 if (credits < 0)
                 {
                     ForegroundColor = ConsoleColor.Red;
-                    WriteLine("(на лъжата краката са къси...)");
+                    Write(" (на лъжата краката са къси...)");
                     ForegroundColor = ConsoleColor.White;
                 }
-                WriteLine("Натисни някое копче за да се върнеш към менюто...");
+                WriteLine($"{Environment.NewLine}Натисни някое копче за да се върнеш към менюто...");
                 ReadKey(true);
                 RunMainMenu();
             }
@@ -241,6 +278,117 @@ namespace BingoGame
                 WriteLine("Натисни някое копче за да се върнеш към менюто...");
                 ReadKey(true);
                 RunMainMenu();
+            }
+        }
+
+        private void WorkCredits()
+        {
+            while (true)
+            {
+                count = 0;
+                Clear();
+                CreditCounter();
+
+                Write("За колко CR искаш да работиш сега: ");
+                ForegroundColor = ConsoleColor.Cyan;
+                int.TryParse(ReadLine(), out int workCredits);
+                ForegroundColor = ConsoleColor.White;
+                while (true)
+                {
+                    workedCR = 1;
+                    if (isSecret)
+                    {
+                        workedCR = 2;
+                    }
+                    Clear();
+                    string genStr = Guid.NewGuid().ToString("n").Substring(0, 8);
+
+                    if (count == workCredits)
+                    {
+                        Clear();
+                        ForegroundColor = ConsoleColor.White;
+                        WriteLine("Имате достатъчно кредити! Можете да отидете да играете...");
+                        Thread.Sleep(2500);
+                        RunMainMenu();
+                    }
+                    Clear();
+
+                    CreditCounter();
+
+                    ForegroundColor = ConsoleColor.DarkGray;
+                    WriteLine("Имаме задача да освободим символите от клетката. За целта трябва да ги изкараш един по един точно. ");
+                    Write($"Ще спечелиш ");
+                    ForegroundColor = ConsoleColor.DarkYellow;
+                    Write($"{workedCR} CR");
+                    ForegroundColor = ConsoleColor.DarkGray;
+                    WriteLine($", ако ги освободиш.{Environment.NewLine}");
+                    Write(@"Напиши ");
+                    ForegroundColor = ConsoleColor.DarkGreen;
+                    Write(@"""leave""");
+                    ForegroundColor = ConsoleColor.DarkGray;
+                    Write(" за отказ.");
+                    ForegroundColor = ConsoleColor.White;
+                    Write($"{Environment.NewLine}Заключените символи: ");
+                    ForegroundColor = ConsoleColor.Cyan;
+                    WriteLine($"{genStr}");
+                    ForegroundColor = ConsoleColor.White;
+                    Write("В процес на освобождаване... ");
+                    ForegroundColor = ConsoleColor.DarkCyan;
+                    string inputStr = ReadLine();
+                    ForegroundColor = ConsoleColor.White;
+
+                    if (inputStr == genStr)
+                    {
+                        count++;
+                        credits += workedCR;
+
+                        Write($"Ти си изработи ");
+                        ForegroundColor = ConsoleColor.DarkYellow;
+                        WriteLine($"{workedCR} CR{Environment.NewLine}");
+                        ForegroundColor = ConsoleColor.White;
+                        Thread.Sleep(1500);
+                    }
+                    else if (inputStr == "secret menu")
+                    {
+                        isSecret = true;
+                        SetSecretValue();
+                        ForegroundColor = ConsoleColor.DarkMagenta;
+                        WaitForResult();
+                        WriteLine("сте секретни - напишете [exit secret menu], за да го махнете. < -------------- > SHHHHHH.....");
+                        ForegroundColor = ConsoleColor.Gray;
+                        Thread.Sleep(3500);
+                        RunMainMenu();
+                    }
+                    else if (inputStr == "exit secret menu")
+                    {
+                        isSecret = false;
+                        SetSecretValue();
+                        ForegroundColor = ConsoleColor.DarkMagenta;
+                        WaitForResult();
+                        ForegroundColor = ConsoleColor.Gray;
+                        Write("SHHH..");
+                        Thread.Sleep(1000);
+                        RunMainMenu();
+                    }
+                    else if (inputStr == "leave")
+                    {
+                        ForegroundColor = ConsoleColor.Cyan;
+                        WriteLine($"{Environment.NewLine}Ти се отказа...връщане назад.");
+                        Thread.Sleep(1500);
+                        RunMainMenu();
+                    }
+                    else
+                    {
+                        ForegroundColor = ConsoleColor.DarkRed;
+                        Write($"{Environment.NewLine}You FAILED...try again.");
+                        Thread.Sleep(1500);
+                        Clear();
+                        ForegroundColor = ConsoleColor.Gray;
+                        continue;
+                    }
+                    SaveCreditValue();
+                    continue;
+                }
             }
         }
 
@@ -374,9 +522,8 @@ namespace BingoGame
 
         private void BingoGame()
         ////TODO FEATURES:
-        /// Improved Betting system
-        /// Each integer to 56 belongs to a numbered bingo ball (ascii drawings)
         /// Bingo algorithm, random sequence of numbers generated by the computer at a set time
+        /// Each integer to 56 belongs to a numbered bingo ball (ascii drawings)    ----HARD
 
         ////TODO WININGS:
         /// Minimum 4 numbers guessed for a profit
@@ -387,10 +534,6 @@ namespace BingoGame
         /// 5 numbers - 150% of the bet
         /// 6 numbers - 200% of the initial bet placed
 
-        ////TODO TASKS: 
-        /// Translate to Bulgarian
-        /// Comment the parts of the code that are hard to understand so future reviewers see them
-
         {
             Clear();
             prompt = $@"
@@ -399,7 +542,7 @@ namespace BingoGame
                                              ( Б ) ( И ) ( Н ) ( Г ) ( О )
                                               \_/   \_/   \_/   \_/   \_/ 
 
-Трябва да имате минимум 20 CR за да играете.
+Трябва да имате минимум 20 CR за да играете. 
 Имате ли ги?
             ";
             string[] options = { "Да", "Не" };
@@ -412,6 +555,7 @@ namespace BingoGame
                 case 0:
                     Beep();
                     ChargeCreditsBingo();
+                    Betting();
                     break;
                 case 1:
                     Beep();
@@ -424,6 +568,81 @@ namespace BingoGame
                     break;
             }
         }
+
+        /// <summary>
+        /// bingo
+        /// </summary>
+        
+        private void Betting()
+        {
+            if (isSecret)
+            {
+                bingoName = "Bingo Anal";
+            }
+            while (true)
+            {
+                Clear();
+                WriteLine($"Здравейте, Вие избрахте да играете в {bingoName}. Вие сте заложили 20CR за тази игра. " +
+                $"Можете да удвоите залога си, ако въведете 'x2' и да го утроите с 'x3' както и да въведете 'x1', ако не желаете да го пипате.");
+                string userInputBet = ReadLine();
+                if (userInputBet == "get back" && isSecret)
+                {
+                    ForegroundColor = ConsoleColor.Magenta;
+                    Write($"You hacker!! You stole ");
+                    ForegroundColor = ConsoleColor.DarkYellow;
+                    Write($"{userBet} CR");
+                    ForegroundColor = ConsoleColor.White;
+                    WriteLine($" Back....");
+                    houseCredits -= userBet;
+                    credits += userBet;
+                    SaveCreditValue();
+                    SaveHouseCredits();
+                    Thread.Sleep(3000);
+                }
+                else if (userInputBet == "x1")
+                {
+                    ForegroundColor = ConsoleColor.DarkCyan;
+                    WriteLine("Ти не си пипна залога...нека започваме.");
+                    ForegroundColor = ConsoleColor.White;
+                    Thread.Sleep(4000);
+                }
+                else if (userInputBet == "x2")
+                {
+                    userBet *= 2;
+                    credits -= userBet - 20;
+                    houseCredits += userBet - 20;
+                    SaveCreditValue();
+                    SaveHouseCredits();
+                    ForegroundColor = ConsoleColor.Yellow;
+                    WriteLine("Ти си удвои залога - да започваме тогава!");
+                    ForegroundColor = ConsoleColor.White;
+                    Thread.Sleep(4000);
+                }
+                else if (userInputBet == "x3")
+                {
+                    userBet *= 3;
+                    credits -= userBet - 20;
+                    houseCredits += userBet - 20;
+                    SaveCreditValue();
+                    SaveHouseCredits();
+                    ForegroundColor = ConsoleColor.Yellow;
+                    WriteLine("Ти си УТРОИ залога - късмет! Нека започнем тегленето!");
+                    ForegroundColor = ConsoleColor.White;
+                    Thread.Sleep(4000);
+                }
+                else
+                {
+                    Clear();
+                    ForegroundColor = ConsoleColor.Red;
+                    WriteLine("Try again!");
+                    ForegroundColor = ConsoleColor.White;
+                    Thread.Sleep(3000);
+                    continue;
+                }
+                break;
+            }
+        }
+
         private void ManyInvalidNumbers()
         {
             ReturnCredits();
@@ -464,117 +683,9 @@ namespace BingoGame
             SetCursorPosition(WindowLeft, WindowTop);
         }
 
-        private void WorkCredits()
-        {
-            while (true)
-            {
-                count = 0;
-                Clear();
-                CreditCounter();
-
-                Write("За колко CR искаш да работиш сега: ");
-                ForegroundColor = ConsoleColor.Cyan;
-                int.TryParse(ReadLine(), out int workCredits);
-                ForegroundColor = ConsoleColor.White;
-                while (true)
-                {
-                    Clear();
-                    string genStr = Guid.NewGuid().ToString("n").Substring(0, 8);
-
-                    if (count == workCredits)
-                    {
-                        Clear();
-                        ForegroundColor = ConsoleColor.White;
-                        WriteLine("Имате достатъчно кредити! Можете да отидете да играете...");
-                        Thread.Sleep(2500);
-                        RunMainMenu();
-                    }
-                    Clear();
-
-                    CreditCounter();
-
-                    ForegroundColor = ConsoleColor.DarkGray;
-                    WriteLine("Имаме задача да освободим символите от клетката. За целта трябва да ги изкараш един по един точно. ");
-                    Write($"Ще спечелиш ");
-                    ForegroundColor = ConsoleColor.DarkYellow;
-                    Write("1CR");
-                    ForegroundColor = ConsoleColor.DarkGray;
-                    WriteLine($", ако ги освободиш.{Environment.NewLine}");
-                    Write(@"Напиши ");
-                    ForegroundColor = ConsoleColor.DarkGreen;
-                    Write(@"""leave""");
-                    ForegroundColor = ConsoleColor.DarkGray;
-                    Write(" за отказ.");
-                    ForegroundColor = ConsoleColor.White;
-                    Write($"{Environment.NewLine}Заключените символи: ");
-                    ForegroundColor = ConsoleColor.Cyan;
-                    WriteLine($"{genStr}");
-                    ForegroundColor = ConsoleColor.White;
-                    Write("В процес на освобождаване... ");
-                    ForegroundColor = ConsoleColor.DarkCyan;
-                    string inputStr = ReadLine();
-                    ForegroundColor = ConsoleColor.White;
-
-                    if (inputStr == genStr)
-                    {
-                        int workedCR = 1;
-                        count++;
-                        credits += workedCR;
-                        if (isSecret)
-                            workedCR = 2;
-
-                        Write($"Ти си изработи ");
-                        ForegroundColor = ConsoleColor.DarkYellow;
-                        WriteLine($"{workedCR} CR{Environment.NewLine}");
-                        ForegroundColor = ConsoleColor.White;
-                        Thread.Sleep(1500);
-                    }
-                    else if (inputStr == "secret menu")
-                    {
-                        isSecret = true;
-                        SetSecretValue();
-                        ForegroundColor = ConsoleColor.DarkMagenta;
-                        WaitForResult();
-                        WriteLine("сте секретни - напишете [exit secret menu], за да го махнете. < -------------- > SHHHHHH.....");
-                        ForegroundColor = ConsoleColor.Gray;
-                        Thread.Sleep(3500);
-                        RunMainMenu();
-                    }
-                    else if (inputStr == "exit secret menu")
-                    {
-                        isSecret = false;
-                        SetSecretValue();
-                        ForegroundColor = ConsoleColor.DarkMagenta;
-                        WaitForResult();
-                        ForegroundColor = ConsoleColor.Gray;
-                        Write("SHHH..");
-                        Thread.Sleep(1000);
-                        RunMainMenu();
-                    }
-                    else if (inputStr == "leave")
-                    {
-                        ForegroundColor = ConsoleColor.Cyan;
-                        WriteLine($"{Environment.NewLine}Ти се отказа...връщане назад.");
-                        Thread.Sleep(1500);
-                        RunMainMenu();
-                    }
-                    else
-                    {
-                        ForegroundColor = ConsoleColor.DarkRed;
-                        Write($"{Environment.NewLine}You FAILED...try again.");
-                        Thread.Sleep(1500);
-                        Clear();
-                        ForegroundColor = ConsoleColor.Gray;
-                        continue;
-                    }
-                    SaveCreditValue();
-                    continue;
-                }
-            }
-        }
-
         private void WinCreditsGuess()
         {
+            houseCredits -= 7;
             credits += 7;
             SaveCreditValue();
         }
@@ -585,6 +696,7 @@ namespace BingoGame
             if (credits >= 2)
             {
                 credits -= 2;
+                houseCredits += 2;
                 SaveCreditValue();
             }
             else
@@ -602,8 +714,10 @@ namespace BingoGame
             if (credits >= 20)
             {
                 credits -= 20;
+                userBet = 20;
+                houseCredits += 20;
                 SaveCreditValue();
-                RunFirstChoise();
+                SaveHouseCredits();
             }
             else
             {
